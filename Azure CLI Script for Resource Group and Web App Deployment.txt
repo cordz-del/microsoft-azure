@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Define variables
+RESOURCE_GROUP="MyResourceGroup"
+LOCATION="eastus"
+APP_SERVICE_PLAN="MyPlan"
+WEBAPP_NAME="myuniquewebappname"  # Must be globally unique
+
+# Create a resource group
+az group create --name $RESOURCE_GROUP --location $LOCATION
+
+# Create an App Service plan (Free tier)
+az appservice plan create --name $APP_SERVICE_PLAN --resource-group $RESOURCE_GROUP --sku FREE
+
+# Create a Web App with Python 3.8 runtime
+az webapp create --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --name $WEBAPP_NAME --runtime "PYTHON|3.8"
+
+# Deploy the application using a ZIP file (assumes app.zip exists in your current directory)
+az webapp deployment source config-zip --resource-group $RESOURCE_GROUP --name $WEBAPP_NAME --src app.zip
