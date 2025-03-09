@@ -1,0 +1,27 @@
+# azure-pipelines.yml
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'
+
+- script: |
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+  displayName: 'Install dependencies'
+
+- script: |
+    pytest --maxfail=1 --disable-warnings -q
+  displayName: 'Run Tests'
+
+- script: |
+    echo "Running performance benchmarks..."
+    python performance_test.py
+  displayName: 'Run Performance Tests'
