@@ -1,0 +1,49 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appServicePlanName": {
+      "type": "string",
+      "defaultValue": "myAppServicePlan",
+      "metadata": {
+        "description": "Name of the App Service Plan"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for the App Service Plan"
+      }
+    },
+    "sku": {
+      "type": "string",
+      "defaultValue": "S1",
+      "allowedValues": [
+        "F1", "D1", "B1", "B2", "B3", "S1", "S2", "S3", "P1V2", "P2V2", "P3V2"
+      ],
+      "metadata": {
+        "description": "SKU for the App Service Plan"
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2021-02-01",
+      "name": "[parameters('appServicePlanName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "Tier": "Standard",
+        "Name": "[parameters('sku')]"
+      },
+      "properties": {}
+    }
+  ],
+  "outputs": {
+    "appServicePlanId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+    }
+  }
+}
