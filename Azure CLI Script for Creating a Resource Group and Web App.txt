@@ -1,0 +1,21 @@
+#!/bin/bash
+# azure_cli_resource_group_webapp.sh
+# This script creates a resource group, an App Service Plan, and a Web App using the Azure CLI.
+# It shows automation in resource management and integration with Azure services.
+
+# Variables
+RESOURCE_GROUP="myResourceGroup"
+LOCATION="eastus"
+WEBAPP_NAME="myUniqueWebApp$(date +%s)"  # Ensure uniqueness with a timestamp
+PLAN_NAME="myAppServicePlan"
+
+# Create a resource group
+az group create --name $RESOURCE_GROUP --location $LOCATION
+
+# Create an App Service Plan
+az appservice plan create --name $PLAN_NAME --resource-group $RESOURCE_GROUP --location $LOCATION --sku S1
+
+# Create a web app
+az webapp create --name $WEBAPP_NAME --resource-group $RESOURCE_GROUP --plan $PLAN_NAME
+
+echo "Resource Group, App Service Plan, and Web App created successfully!"
