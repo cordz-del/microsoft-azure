@@ -1,0 +1,16 @@
+#!/bin/bash
+# deploy_function.sh
+# This script deploys an Azure Function App using Azure Functions Core Tools.
+# It streamlines the deployment process, integrating into CI/CD pipelines.
+
+FUNCTION_APP_NAME="myUniqueFunctionApp"
+RESOURCE_GROUP="myResourceGroup"
+LOCATION="eastus"
+
+# Create the function app
+func azure functionapp create --resource-group $RESOURCE_GROUP --consumption-plan-location $LOCATION --runtime python --functions-version 3 --name $FUNCTION_APP_NAME
+
+# Deploy the function app
+func azure functionapp publish $FUNCTION_APP_NAME
+
+echo "Azure Function App deployed successfully!"
