@@ -1,0 +1,15 @@
+#!/bin/bash
+# deploy_arm_template.sh
+# This script deploys an ARM template (e.g., for an App Service Plan) using the Azure CLI.
+# It underlines your competency in automating deployments via infrastructure-as-code.
+
+RESOURCE_GROUP="myResourceGroup"
+TEMPLATE_FILE="app_service_plan_template.json"
+DEPLOYMENT_NAME="AppServicePlanDeployment"
+
+az deployment group create \
+    --resource-group $RESOURCE_GROUP \
+    --name $DEPLOYMENT_NAME \
+    --template-file $TEMPLATE_FILE
+
+echo "ARM template deployed successfully!"
