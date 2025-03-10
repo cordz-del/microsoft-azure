@@ -1,0 +1,46 @@
+# azure-pipelines-full.yml
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  imageName: 'my-python-app'
+  acrName: 'myContainerRegistry'
+  functionAppName: 'myAzureFunction'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'
+  displayName: 'Use Python 3.x'
+
+- script: |
+    pip install --upgrade pip
+    pip install -r requirements.txt
+  displayName: 'Install dependencies'
+
+- script: |
+    pytest --junitxml=test-results.xml
+  displayName: 'Run Tests with JUnit Report'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFiles: '**/test-results.xml'
+    testRunTitle: 'Pytest Results'
+  displayName: 'Publish Test Results'
+
+- task: Docker@2
+  inputs:
+    command: 'buildAndPush'
+    repository: '$(acrName).azurecr.io/$(imageName)'
+    Dockerfile: '**/Dockerfile'
+    containerRegistry: '$(acrName)'
+    tags: |
+      $(Build.BuildId)
+  displayName: 'Build and push Docker image'
+
+- script: |
+    az webapp create --resource-group MyResourceGroup --plan MyPlan --name $(functionAppName) --deployment-container-image-name $(acrName).azurecr.io/$(imageName):$(Build.BuildId)
+  displayName: 'Deploy Docker image to Azure Web App'
