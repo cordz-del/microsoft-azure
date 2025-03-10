@@ -1,0 +1,21 @@
+# azure-pipelines-docker.yml
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  imageName: 'my-python-app'
+  acrName: 'myContainerRegistry'
+
+steps:
+- task: Docker@2
+  inputs:
+    command: 'buildAndPush'
+    repository: '$(acrName).azurecr.io/$(imageName)'
+    Dockerfile: '**/Dockerfile'
+    containerRegistry: '$(acrName)'
+    tags: |
+      $(Build.BuildId)
+  displayName: 'Build and push Docker image'
