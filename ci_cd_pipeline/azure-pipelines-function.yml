@@ -1,0 +1,20 @@
+# azure-pipelines-function.yml
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'
+  displayName: 'Use Python 3.x'
+
+- script: |
+    pip install -r requirements.txt
+  displayName: 'Install dependencies'
+
+- script: |
+    func azure functionapp publish $(FUNCTION_APP_NAME)
+  displayName: 'Deploy Azure Function'
