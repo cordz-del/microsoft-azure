@@ -1,0 +1,8 @@
+# Dockerfile for Azure Function
+FROM mcr.microsoft.com/azure-functions/python:3.0-python3.8-appservice
+
+# Copy function code and requirements
+COPY . /home/site/wwwroot
+RUN pip install -r /home/site/wwwroot/requirements.txt
+
+# Azure Functions uses the 'python' command by default
